@@ -34,8 +34,8 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   color: var(--gray-900);
   background: var(--off-white);
   line-height: 1.75;
@@ -110,6 +110,28 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--white);
   padding: 64px 0;
   text-align: center;
+}
+
+/* Hero 区的 CTA 按钮：实心白底 + 紫字，确保高对比度 */
+.hero .nav-link {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 28px;
+  background: var(--white);
+  color: var(--purple-deep);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.hero .nav-link:hover {
+  background: var(--white);
+  color: var(--purple-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
 .hero h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: 0.08em; }
@@ -313,6 +335,18 @@ img { max-width: 100%; height: auto; display: block; }
 .blog-detail-body {
   text-align: justify;
   hyphens: auto;
+  word-break: auto-phrase;
+  overflow-wrap: anywhere;
+}
+
+/* 博客正文内所有图片lazy loading + 居中 */
+.blog-detail-body img {
+  display: block;
+  margin: 16px auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
 }
 
 /* === Blog Navigation (prev/next) === */
@@ -367,7 +401,7 @@ img { max-width: 100%; height: auto; display: block; }
   margin-top: 48px;
 }
 
-.site-footer a { color: var(--purple); }
+.site-footer a { color: var(--purple-deep); text-decoration: underline; }
 
 /* === Responsive === */
 @media (max-width: 640px) {
@@ -375,12 +409,14 @@ img { max-width: 100%; height: auto; display: block; }
   .site-header h1 { font-size: 1.5rem; }
   .hero h1 { font-size: 1.8rem; }
   .hero .hero-meta { gap: 16px; }
-  .blog-card { flex-direction: column; }
+  .blog-card { flex-direction: column; gap: 8px; }
   .blog-card .card-date { flex-direction: row; gap: 6px; width: auto; }
   .blog-detail-header { padding: 20px; }
-  .blog-detail-body { padding: 20px; }
+  .blog-detail-body { padding: 20px; font-size: 0.9rem; }
   .blog-nav { flex-direction: column; padding: 16px 20px; }
   .blog-nav a { max-width: 100%; }
+  /* 移动端图片画廊改为2列 */
+  .blog-gallery { grid-template-columns: repeat(2, 1fr) !important; padding: 0 20px 12px !important; }
 }
 
 /* === Utility === */

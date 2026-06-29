@@ -193,6 +193,12 @@ def generate() -> None:
     copy_static()
     copy_images()
 
+    # 复制404页面
+    template_404 = TEMPLATES_DIR / "404.html"
+    if template_404.exists():
+        shutil.copy2(template_404, PUBLIC_DIR / "404.html")
+        print("  - 404.html 已生成")
+
     print("=" * 60)
     print(f"站点生成完成!")
     print(f"输出目录: {PUBLIC_DIR}")
