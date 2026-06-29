@@ -5,10 +5,14 @@ __pycache__/
 *.so
 .venv/
 
-# Data & outputs
+# ─── 归档数据：必须入库（这是离线归档的核心载体）───
+# data/raw/blogs.json   — 数据源真相，入库
+# data/images/          — 原始图片素材，入库
+# 仅排除中间产物
 data/raw/*.html
-data/raw/*.json
-data/images/
+data/raw/missing_diagnosis.json
+
+# ─── 派生产物：构建时由 generator.py 生成，不入库 ───
 public/
 
 # Logs
