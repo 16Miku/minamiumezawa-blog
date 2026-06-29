@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ description }}">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>梅澤 美波</h1>
+      <p class="hero-sub">乃木坂46 3期生 | 博客完整归档</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-value">{{ total_blogs }}</span>
+          <span class="meta-label">篇博客</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-value">{{ year_range }}</span>
+          <span class="meta-label">活动期间</span>
+        </div>
+      </div>
+      <a href="/list.html" class="nav-link" style="margin-top:24px;position:relative;">
+        浏览全部博客 →
+      </a>
+    </div>
+  </section>
+
+  <!-- Recent Blogs -->
+  <main class="container pt-section">
+    <h2 class="section-title">最新博客</h2>
+    <div class="blog-card-list">
+      {% for blog in recent_blogs %}
+      <article class="blog-card">
+        <div class="card-date">
+          {% if blog.date %}
+          <span class="date-day">{{ blog.date.split('.')[2][:2] if '.' in blog.date else '' }}</span>
+          <span class="date-ym">{{ blog.date[:7] | replace('.', '/') }}</span>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">
+            <a href="/blog/{{ blog.id }}.html">{{ blog.title }}</a>
+          </h3>
+          {% if blog.content_text %}
+          <p class="card-excerpt">{{ blog.content_text[:120] }}…</p>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="/list.html" class="nav-link" style="background:var(--purple-bg);color:var(--purple-deep);border:1px solid var(--purple-light);">
+        查看全部 {{ total_blogs }} 篇 →
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>梅澤美波ブログアーカイブ | 粉丝非官方归档</p>
+    <p>数据来源: <a href="https://www.nogizaka46.com" target="_blank" rel="noopener">乃木坂46公式</a></p>
+  </footer>
+</body>
+</html>

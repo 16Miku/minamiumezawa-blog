@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ blog.title }} | 梅澤美波ブログアーカイブ</title>
+  <meta name="description" content="{{ blog.content_text[:160] if blog.content_text else blog.title }}">
+  {% if blog.og_image %}
+  <meta property="og:image" content="{{ blog.og_image }}">
+  {% endif %}
+  <meta property="og:title" content="{{ blog.title }}">
+  <meta property="og:type" content="article">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* 详情页正文图片自适配 */
+    .blog-detail-body img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="/" style="color:inherit;">梅澤 美波</a></h1>
+      <p class="subtitle">ブログアーカイブ</p>
+      <a href="/list.html" class="nav-link">← 博客列表</a>
+    </div>
+  </header>
+
+  <!-- Blog Detail -->
+  <article class="blog-detail">
+    <div class="blog-detail-header">
+      {% if blog.date %}
+      <p class="blog-date">{{ blog.date | replace('.', '/') }}</p>
+      {% endif %}
+      <h1>{{ blog.title }}</h1>
+    </div>
+
+    <div class="blog-detail-body">
+      {{ blog.content_html | safe }}
+    </div>
+
+    <!-- 原始链接 -->
+    <div style="padding:0 32px 16px; font-size:0.8rem; color:var(--gray-500);">
+      原文链接:
+      <a href="{{ blog.url }}" target="_blank" rel="noopener">{{ blog.url }}</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="blog-nav">
+      {% if prev_blog %}
+      <a href="/blog/{{ prev_blog.id }}.html">
+        <span class="nav-label">← 前の記事</span>
+        <span class="nav-title">{{ prev_blog.title }}</span>
+      </a>
+      {% else %}
+      <div></div>
+      {% endif %}
+
+      {% if next_blog %}
+      <a href="/blog/{{ next_blog.id }}.html" style="text-align:right;">
+        <span class="nav-label">次の記事 →</span>
+        <span class="nav-title">{{ next_blog.title }}</span>
+      </a>
+      {% else %}
+      <div></div>
+      {% endif %}
+    </nav>
+  </article>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>梅澤美波ブログアーカイブ | 粉丝非官方归档</p>
+    <p>数据来源: <a href="https://www.nogizaka46.com" target="_blank" rel="noopener">乃木坂46公式</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>博客列表 | 梅澤美波ブログアーカイブ</title>
+  <meta name="description" content="乃木坂46 梅澤美波 博客归档 - 完整列表">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="/" style="color:inherit;">梅澤 美波</a></h1>
+      <p class="subtitle">ブログアーカイブ</p>
+    </div>
+  </header>
+
+  <!-- Blog List -->
+  <main class="container pt-section">
+    <h2 class="section-title">全 {{ blogs | length }} 篇博客 (第 {{ current_page }} / {{ total_pages }} 页)</h2>
+    <div class="blog-card-list">
+      {% for blog in blogs %}
+      <article class="blog-card">
+        <div class="card-date">
+          {% if blog.date %}
+          <span class="date-day">{{ blog.date.split('.')[2][:2] if '.' in blog.date else '' }}</span>
+          <span class="date-ym">{{ blog.date[:7] | replace('.', '/') }}</span>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">
+            <a href="/blog/{{ blog.id }}.html">{{ blog.title }}</a>
+          </h3>
+          {% if blog.content_text %}
+          <p class="card-excerpt">{{ blog.content_text[:120] }}…</p>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination">
+      {% if has_prev %}
+      <a href="{% if current_page == 2 %}/list.html{% else %}/list_{{ current_page - 1 }}.html{% endif %}">
+        ← 前のページ
+      </a>
+      {% else %}
+      <span class="disabled">← 前のページ</span>
+      {% endif %}
+
+      {% for p in range(1, total_pages + 1) %}
+        {% if p == current_page %}
+        <span class="current">{{ p }}</span>
+        {% else %}
+        <a href="{% if p == 1 %}/list.html{% else %}/list_{{ p }}.html{% endif %}">{{ p }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if has_next %}
+      <a href="/list_{{ current_page + 1 }}.html">
+        次のページ →
+      </a>
+      {% else %}
+      <span class="disabled">次のページ →</span>
+      {% endif %}
+    </nav>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>梅澤美波ブログアーカイブ | 粉丝非官方归档</p>
+    <p>数据来源: <a href="https://www.nogizaka46.com" target="_blank" rel="noopener">乃木坂46公式</a></p>
+  </footer>
+</body>
+</html>

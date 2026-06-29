@@ -1,0 +1,4 @@
+services:
+  - type: static
+    name: minamiumezawa-blog-archive
+    buildDir: public
