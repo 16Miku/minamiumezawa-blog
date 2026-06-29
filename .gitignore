@@ -1,10 +1,28 @@
-# Python-generated files
+# Python
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*$py.class
+*.so
+.venv/
 
-# Virtual environments
-.venv
+# Data & outputs
+data/raw/*.html
+data/raw/*.json
+data/images/
+public/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.exe
