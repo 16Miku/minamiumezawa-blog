@@ -27,6 +27,20 @@ BLOGS_JSON = RAW_DIR / "blogs.json"
 # 确保目录存在
 PUBLIC_DIR.mkdir(exist_ok=True)
 
+# ─── 共享 Jinja2 Environment（避免重复创建） ──────
+_env: Environment = None
+
+
+def _get_env() -> Environment:
+    """获取共享的Jinja2 Environment实例"""
+    global _env
+    if _env is None:
+        _env = Environment(
+            loader=FileSystemLoader(TEMPLATES_DIR),
+            autoescape=select_autoescape(['html', 'xml'])
+        )
+    return _env
+
 
 def load_blogs() -> List[Dict]:
     """加载博客数据"""
@@ -47,10 +61,7 @@ def get_blog_by_id(blogs: List[Dict], blog_id: str) -> Dict:
 
 def generate_index(blogs: List[Dict]) -> None:
     """生成首页"""
-    env = Environment(
-        loader=FileSystemLoader(TEMPLATES_DIR),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
+    env = _get_env()
     template = env.get_template("index.html")
 
     # 取最近10篇博客
@@ -62,6 +73,7 @@ def generate_index(blogs: List[Dict]) -> None:
         recent_blogs=recent_blogs,
         total_blogs=len(blogs),
         year_range="2018 - 2026",
+        all_blogs=blogs,
     )
 
     (PUBLIC_DIR / "index.html").write_text(html, encoding="utf-8")
@@ -70,10 +82,7 @@ def generate_index(blogs: List[Dict]) -> None:
 
 def generate_blog_list(blogs: List[Dict], per_page: int = 10) -> None:
     """生成博客列表页 (分页)"""
-    env = Environment(
-        loader=FileSystemLoader(TEMPLATES_DIR),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
+    env = _get_env()
     template = env.get_template("blog_list.html")
 
     total_pages = (len(blogs) + per_page - 1) // per_page
@@ -101,10 +110,7 @@ def generate_blog_list(blogs: List[Dict], per_page: int = 10) -> None:
 
 def generate_blog_detail(blogs: List[Dict]) -> None:
     """生成单篇博客详情页"""
-    env = Environment(
-        loader=FileSystemLoader(TEMPLATES_DIR),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
+    env = _get_env()
     template = env.get_template("blog_detail.html")
 
     blog_dir = PUBLIC_DIR / "blog"
@@ -143,6 +149,28 @@ def copy_static() -> None:
     print("  - 静态资源已复制")
 
 
+def copy_images() -> None:
+    """复制博客图片到public/images/"""
+    src_images_dir = DATA_DIR / "images"
+    dst_images_dir = PUBLIC_DIR / "images"
+
+    if not src_images_dir.exists():
+        print("  - 图片目录不存在，跳过")
+        return
+
+    dst_images_dir.mkdir(parents=True, exist_ok=True)
+
+    count = 0
+    for item in src_images_dir.rglob("*"):
+        if item.is_file():
+            dst = dst_images_dir / item.name
+            if not dst.exists() or dst.stat().st_size != item.stat().st_size:
+                shutil.copy2(item, dst)
+                count += 1
+
+    print(f"  - 博客图片已复制 ({count} 个新文件, 总 {len(list(dst_images_dir.rglob('*')))} 个)")
+
+
 def generate() -> None:
     """生成完整静态站点"""
     print("=" * 60)
@@ -163,6 +191,7 @@ def generate() -> None:
     generate_blog_list(blogs)
     generate_blog_detail(blogs)
     copy_static()
+    copy_images()
 
     print("=" * 60)
     print(f"站点生成完成!")
