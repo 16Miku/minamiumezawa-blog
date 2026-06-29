@@ -1,21 +1,19 @@
-# Render 静态站点部署配置
-# 文档: https://render.com/docs/static-sites
+# Render 静态站点部署配置 (Blueprint)
+# 文档: https://render.com/docs/blueprint-spec
 #
 # 架构: 仓库入库源数据 (data/raw/blogs.json + data/images/)，
 #       构建时运行 generator.py 生成 public/ 静态产物。
 services:
   - type: web
-    name: minamiumezawa-blog-archive
     runtime: static
-    # 构建: 安装依赖并生成静态站点
+    name: minamiumezawa-blog-archive
+    # 构建: 安装jinja2并生成静态站点
     buildCommand: pip install jinja2 && python src/generator.py
     # 发布目录: generator.py 的输出
     staticPublishPath: ./public
-    # 路由: 所有未匹配路径回退到 404 页面
-    routes:
-      - type: rewrite
-        source: /blog/*
-        destination: /blog/:splat
+    # 自动部署: 每次 push 到 main 触发
+    autoDeployTrigger: commit
+    # 缓存与安全响应头
     headers:
       - path: /images/*
         name: Cache-Control
